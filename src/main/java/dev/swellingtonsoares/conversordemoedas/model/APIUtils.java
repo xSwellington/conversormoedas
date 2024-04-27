@@ -2,13 +2,14 @@ package dev.swellingtonsoares.conversordemoedas.model;
 
 
 import com.google.gson.Gson;
-import dev.swellingtonsoares.conversordemoedas.interfaces.ICurrentResultInfo;
+
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class APIUtils {
 
+    public static final SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
     private static final Map<String, String> currencyMap;
 
     private static final String ApiKey = "4bd15ea1607c60ac4eb077c4";
@@ -149,7 +151,7 @@ public class APIUtils {
         return APIUtils.currencyMap;
     }
 
-    public static ICurrentResultInfo MakeRequest(String source, String target, Double value) throws IOException, InterruptedException {
+    public static CurrentCheckResult MakeRequest(String source, String target, Double value) throws IOException, InterruptedException {
         String uri = APIEndPoint + "/" + ApiKey + "/pair/" + source + "/" + target;
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
@@ -157,6 +159,7 @@ public class APIUtils {
                 .GET()
                 .build();
         var response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        Thread.sleep(10000);
         DataResult dataResult = new Gson().fromJson(response.body(), DataResult.class);
         if (!dataResult.result().equals("success"))
             throw new RuntimeException("Não foi possível verificar as informações no momento.");

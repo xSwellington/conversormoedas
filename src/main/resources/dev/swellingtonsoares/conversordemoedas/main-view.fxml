@@ -47,7 +47,7 @@
             <TableColumn fx:id="tbColumnTargetCoin" prefWidth="118.4000244140625" text="Moeda de destino" />
             <TableColumn fx:id="tbColumnPrice" prefWidth="118.4000244140625" text="Cotação" />
             <TableColumn fx:id="tbColumnLastUpdate" prefWidth="118.4000244140625" text="Última atualização" />
-            <TableColumn fx:id="lbColumnSavedInfo" prefWidth="118.4000244140625" text="Consulta" />
+            <TableColumn fx:id="tbColumnSavedInfo" prefWidth="118.4000244140625" text="Consulta" />
         </columns>
       </TableView>
       <Label text="Histórico." />

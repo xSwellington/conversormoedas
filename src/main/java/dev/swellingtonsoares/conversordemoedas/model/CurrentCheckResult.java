@@ -1,60 +1,63 @@
 package dev.swellingtonsoares.conversordemoedas.model;
 
-import dev.swellingtonsoares.conversordemoedas.interfaces.ICurrentResultInfo;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CurrentCheckResult implements ICurrentResultInfo {
+import static dev.swellingtonsoares.conversordemoedas.model.APIUtils.fmt;
+
+public class CurrentCheckResult {
 
     private final DataResult result;
     private final double value;
-    private final SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+
+
+    private final long checkDateTimestamp;
 
     CurrentCheckResult(DataResult result, double currentValue) {
         this.result = result;
         this.value = currentValue;
+        checkDateTimestamp = new Date().getTime();
     }
 
-    @Override
-    public double getConversion() {
+    public double getQuota() {
         return result.conversion_rate();
     }
 
-    @Override
+    public DataResult getRawRequest(){
+        return result;
+    }
+
     public String getSourceCurrencyCode() {
         return result.base_code();
     }
 
-    @Override
-    public String getSourceCurrentyName() {
+    public String getSourceCurrencyName() {
         return APIUtils.getValidCurrencies().get(result.base_code());
     }
 
-    @Override
+
     public String getTargetCurrencyCode() {
         return result.target_code();
     }
 
-    @Override
+
     public String getTargetCurrentName() {
         return APIUtils.getValidCurrencies().get(result.target_code());
     }
 
-    @Override
-    public String getLastConversionUpdateDate() {
+    public String getLastQuotaUpdatedFormatedDate() {
         return fmt.format(new Date(result.time_next_update_unix() * 1000));
     }
 
-    @Override
-    public String getCheckDate() {
-        return fmt.format(new Date());
+    public long getCheckedDateTimestamp() {
+        return checkDateTimestamp;
     }
 
-    @Override
+
+
     public String getTotalValue() {
         return String.format("%.3f", result.conversion_rate() * value);
     }
 
-    
+
 }

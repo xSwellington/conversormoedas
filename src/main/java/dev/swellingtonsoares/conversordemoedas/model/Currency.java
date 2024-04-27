@@ -1,14 +1,13 @@
 package dev.swellingtonsoares.conversordemoedas.model;
 
 import dev.swellingtonsoares.conversordemoedas.interfaces.CurrencyEventHandler;
-import dev.swellingtonsoares.conversordemoedas.interfaces.ICurrentResultInfo;
 
 import java.security.InvalidParameterException;
 
 public class Currency {
 
     private CurrencyEventHandler<Void> onStart;
-    private CurrencyEventHandler<ICurrentResultInfo>  onFinish;
+    private CurrencyEventHandler<CurrentCheckResult> onFinish;
     private CurrencyEventHandler<String> onError;
     private String source;
     private String target;
@@ -38,7 +37,7 @@ public class Currency {
         return this;
     }
 
-    public Currency onFinish(CurrencyEventHandler<ICurrentResultInfo> callback) {
+    public Currency onFinish(CurrencyEventHandler<CurrentCheckResult> callback) {
         this.onFinish = callback;
         return this;
     }
@@ -50,12 +49,24 @@ public class Currency {
 
     public void build() {
         try {
+            if (source == null || target == null || source.isBlank() || target.isBlank())
+                throw new InvalidParameterException("Defina a moeda de ORIGEM e DESTINO.");
 
-            if (source == null || target == null || source.isBlank() || target.isBlank()) throw new InvalidParameterException("Defina a moeda de ORIGEM e DESTINO.");
+            if (this.onStart != null) {
+                new Thread(() -> this.onStart.call(null)).start();
+            }
 
-            if (this.onStart != null) this.onStart.call(null);
-            ICurrentResultInfo result = APIUtils.MakeRequest( source, target, value );
-            if (this.onFinish != null) this.onFinish.call(result);
+            new Thread(() -> {
+                try {
+                    CurrentCheckResult result = APIUtils.MakeRequest(source, target, value);
+                    if (this.onFinish != null) {
+                        this.onFinish.call(result);
+                    }
+                } catch (Exception e) {
+                    if (this.onError != null) this.onError.call(e.getMessage());
+                }
+            }).start();
+
         } catch (Exception e) {
             if (this.onError != null) this.onError.call(e.getMessage());
         }

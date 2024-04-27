@@ -6,7 +6,6 @@ import java.util.List;
 
 public class HistoricManager {
 
-
     private static HistoricManager manager;
     private final List<HistoricItem> historicItemList = new ArrayList<>();
 
@@ -22,7 +21,7 @@ public class HistoricManager {
         return manager;
     }
 
-    public void add(HistoricItem result) throws IOException {
+    public void add(HistoricItem result) {
         historicItemList.add(result);
     }
 
@@ -30,9 +29,10 @@ public class HistoricManager {
         try (BufferedReader br = new BufferedReader( new FileReader("historic.csv") )) {
             String data = br.readLine();
             while (data != null && (!data.isBlank())) {
-                historicItemList.add(0, HistoricItem.fromCsv(data));
+                historicItemList.add(HistoricItem.fromCsv(data));
                 data = br.readLine();
             }
+
             return true;
         } catch (Exception e) {
             return  false;

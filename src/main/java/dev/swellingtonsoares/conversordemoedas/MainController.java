@@ -5,6 +5,7 @@ import dev.swellingtonsoares.conversordemoedas.model.Currency;
 import dev.swellingtonsoares.conversordemoedas.model.HistoricItem;
 import dev.swellingtonsoares.conversordemoedas.model.HistoricManager;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -16,6 +17,7 @@ import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -54,7 +56,7 @@ public class MainController implements Initializable {
     private Label lbValorTotal;
 
     @FXML
-    private TableColumn<HistoricItem, String> lbColumnSavedInfo;
+    private TableColumn<HistoricItem, String> tbColumnSavedInfo;
 
     @FXML
     private TableColumn<HistoricItem, Integer> tbColumnId;
@@ -110,39 +112,31 @@ public class MainController implements Initializable {
                     .addTarget(cbTargetCoin.getValue())
                     .addValue(Double.parseDouble(tfCoinValue.textProperty().get()))
                     .onStart((__) -> {
-                        Task<Void> task = new Task<>() {
-                            @Override
-                            protected Void call() throws InterruptedException {
-                                Thread.sleep(1);
-                                Platform.runLater(() -> {
-                                    btnCheck.setDisable(true);
-                                    cbTargetCoin.setDisable(true);
-                                    cbSourceCoin.setDisable(true);
-                                    tfCoinValue.setDisable(true);
-                                    lbCotacao.setText("Cotação: Verificando...");
-                                    lbValorTotal.setText("Valor Total: Verificando...");
-                                    lbLastUpdate.setText("Última Atualização: Verificando...");
-                                });
-                                return null;
-                            }
-                        };
-                        new Thread(task).start();
+                        Platform.runLater(() -> {
+                            btnCheck.setDisable(true);
+                            cbTargetCoin.setDisable(true);
+                            cbSourceCoin.setDisable(true);
+                            tfCoinValue.setDisable(true);
+                            lbCotacao.setText("Cotação: Verificando...");
+                            lbValorTotal.setText("Valor Total: Verificando...");
+                            lbLastUpdate.setText("Última Atualização: Verificando...");
+                        });
 
                     }).onFinish(result -> {
 
                         Task<Void> task = new Task<>() {
                             @Override
-                            protected Void call() throws IOException {
+                            protected Void call() {
                                 Platform.runLater(() -> {
                                     btnCheck.setDisable(false);
                                     cbTargetCoin.setDisable(false);
                                     cbSourceCoin.setDisable(false);
                                     tfCoinValue.setDisable(false);
-                                    lbCotacao.setText("Cotação: " + result.getTargetCurrencyCode() + " " + result.getConversion() + "( " + result.getTargetCurrentName() + " )");
-                                    lbValorTotal.setText("Valor Total: " + result.getTargetCurrencyCode() + " " + result.getTotalValue() + " ( " + result.getTargetCurrentName() + " )");
-                                    lbLastUpdate.setText("Última Atualização: " + result.getLastConversionUpdateDate());
+                                    lbCotacao.setText(String.format("Cotação: %.4f %s ( %s )", result.getQuota(), result.getTargetCurrencyCode(), result.getTargetCurrencyCode()));
+                                    lbValorTotal.setText(String.format("Valor total: %s %s ( %s )", result.getTotalValue(), result.getTargetCurrencyCode(), result.getTargetCurrentName()));
+                                    lbLastUpdate.setText("Última Atualização: " + result.getLastQuotaUpdatedFormatedDate());
                                 });
-                                HistoricItem h = new HistoricItem(result, HistoricManager.getInstance().getHistoricItemList().size() + 1);
+                                HistoricItem h = new HistoricItem(result, historyManager.getHistoricItemList().size() + 1);
                                 historyManager.add(h);
                                 populateTableRow(h);
                                 return null;
@@ -160,13 +154,21 @@ public class MainController implements Initializable {
         tbColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
         tbColumnSourceCoin.setCellValueFactory(new PropertyValueFactory<>("sourceCurrencyCode"));
         tbColumnTargetCoin.setCellValueFactory(new PropertyValueFactory<>("targetCurrencyCode"));
-        tbColumnPrice.setCellValueFactory(new PropertyValueFactory<>("conversion"));
-        tbColumnLastUpdate.setCellValueFactory(new PropertyValueFactory<>("lastConversionUpdateDate"));
-        lbColumnSavedInfo.setCellValueFactory(new PropertyValueFactory<>("checkDate"));
+        tbColumnPrice.setCellValueFactory(new PropertyValueFactory<>("quotation"));
+
+        tbColumnLastUpdate.setCellValueFactory(historicItemCell -> new SimpleStringProperty(
+                APIUtils.fmt.format(new Date(historicItemCell.getValue().getLastQuotaUpdateTimestamp() * 1000))
+        ));
+
+        tbColumnSavedInfo.setCellValueFactory(historicItemCell -> new SimpleStringProperty(
+                APIUtils.fmt.format(new Date(historicItemCell.getValue().getCheckedDateTimestamp()))
+        ));
 
         try {
             if (HistoricManager.getInstance().load()) {
-                HistoricManager.getInstance().getHistoricItemList().forEach(this::populateTableRow);
+                HistoricManager.getInstance().getHistoricItemList().stream()
+                        .sorted((o1, o2) -> (int) (o2.getCheckedDateTimestamp() - o1.getCheckedDateTimestamp()))
+                        .forEach(this::populateTableRow);
             }
         } catch (IOException ignored) {
         }
