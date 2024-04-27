@@ -8,13 +8,13 @@ O projeto usa uma interface simples, onde você precisa selecionar a moeda de or
 
 Veja algumas imagens abaixo.
 
-![Tela Principal](https://prnt.sc/z4GiF3e5na3b)
+![Tela Principal](https://img001.prntscr.com/file/img001/EuOulrTlSW6wOM7aalmdjA.png)
 
-![Moedas](https://prnt.sc/Z4c5BU4fozxe)
+![Moedas](https://img001.prntscr.com/file/img001/tIHxulvmRBy-Iijf2Wg9wg.png)
 
 O programa também salva e carrega o histório em sua interface.
 
-![Histórico](https://prnt.sc/cnfeVtv9l_We)
+![Histórico](https://img001.prntscr.com/file/img001/beka6k-6RfS77zWmY4ofxQ.png)
 
 
 
