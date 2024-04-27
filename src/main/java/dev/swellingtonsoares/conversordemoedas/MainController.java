@@ -7,6 +7,7 @@ import dev.swellingtonsoares.conversordemoedas.model.HistoricManager;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -17,6 +18,7 @@ import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -35,6 +37,8 @@ public class MainController implements Initializable {
             return null;
         }
     };
+
+    private Comparator<HistoricItem> comparatorCheckedDate = (o1, o2) -> (int) ( o2.getCheckedDateTimestamp() - o1.getCheckedDateTimestamp());
 
 
     @FXML
@@ -164,10 +168,18 @@ public class MainController implements Initializable {
                 APIUtils.fmt.format(new Date(historicItemCell.getValue().getCheckedDateTimestamp()))
         ));
 
+        tbHistory.getItems().addListener((ListChangeListener<HistoricItem>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    tbHistory.getItems().sort(comparatorCheckedDate);
+                }
+            }
+        });
+
         try {
             if (HistoricManager.getInstance().load()) {
                 HistoricManager.getInstance().getHistoricItemList().stream()
-                        .sorted((o1, o2) -> (int) (o2.getCheckedDateTimestamp() - o1.getCheckedDateTimestamp()))
+                        .sorted(comparatorCheckedDate)
                         .forEach(this::populateTableRow);
             }
         } catch (IOException ignored) {

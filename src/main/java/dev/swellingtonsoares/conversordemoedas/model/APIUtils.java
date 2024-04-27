@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class APIUtils {
 
-    public static final SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+    public static final SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     private static final Map<String, String> currencyMap;
 
     private static final String ApiKey = "4bd15ea1607c60ac4eb077c4";
@@ -159,7 +159,6 @@ public class APIUtils {
                 .GET()
                 .build();
         var response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-        Thread.sleep(10000);
         DataResult dataResult = new Gson().fromJson(response.body(), DataResult.class);
         if (!dataResult.result().equals("success"))
             throw new RuntimeException("Não foi possível verificar as informações no momento.");
