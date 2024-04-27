@@ -1,4 +1,4 @@
-package dev.swellingtonsoares.conversordemoedas;
+package dev.swellingtonsoares.conversordemoedas.model;
 
 import java.io.*;
 import java.util.ArrayList;

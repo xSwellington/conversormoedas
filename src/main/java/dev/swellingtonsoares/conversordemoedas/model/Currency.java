@@ -1,4 +1,7 @@
-package dev.swellingtonsoares.conversordemoedas;
+package dev.swellingtonsoares.conversordemoedas.model;
+
+import dev.swellingtonsoares.conversordemoedas.interfaces.CurrencyEventHandler;
+import dev.swellingtonsoares.conversordemoedas.interfaces.ICurrentResultInfo;
 
 import java.security.InvalidParameterException;
 

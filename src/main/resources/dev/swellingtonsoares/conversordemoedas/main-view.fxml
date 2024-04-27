@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="506.0" prefWidth="688.0" spacing="8.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/20.0.1" fx:controller="dev.swellingtonsoares.conversordemoedas.MainController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <children>
+      <Label text="Moedas:" />
+      <HBox prefHeight="34.0" prefWidth="520.0">
+         <children>
+            <ComboBox fx:id="cbSourceCoin" prefHeight="30.0" prefWidth="197.0" promptText="Moeda inicial" HBox.hgrow="ALWAYS" />
+            <Label text="para" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets left="16.0" right="16.0" />
+               </padding>
+            </Label>
+            <ComboBox fx:id="cbTargetCoin" prefHeight="30.0" prefWidth="187.0" promptText="moeda de destino" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="tfCoinValue" prefHeight="26.0" prefWidth="87.0" promptText="Valor">
+               <HBox.margin>
+                  <Insets left="8.0" right="8.0" />
+               </HBox.margin>
+            </TextField>
+            <Button fx:id="btnCheck" disable="true" mnemonicParsing="false" text="Verificar" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="16.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <Label fx:id="lbCotacao" text="Cotação:" />
+      <Label fx:id="lbValorTotal" text="Valor total:" />
+      <Label fx:id="lbLastUpdate" text="Última atualização:" />
+      <TableView fx:id="tbHistory" prefHeight="335.0" prefWidth="648.0">
+        <columns>
+          <TableColumn fx:id="tbColumnId" prefWidth="59.20001220703125" text="ID" />
+          <TableColumn fx:id="tbColumnSourceCoin" prefWidth="91.20001220703125" text="Moeda Inicial" />
+            <TableColumn fx:id="tbColumnTargetCoin" prefWidth="118.4000244140625" text="Moeda de destino" />
+            <TableColumn fx:id="tbColumnPrice" prefWidth="118.4000244140625" text="Cotação" />
+            <TableColumn fx:id="tbColumnLastUpdate" prefWidth="118.4000244140625" text="Última atualização" />
+            <TableColumn fx:id="lbColumnSavedInfo" prefWidth="118.4000244140625" text="Consulta" />
+        </columns>
+      </TableView>
+      <Label text="Histórico." />
+   </children>
+</VBox>

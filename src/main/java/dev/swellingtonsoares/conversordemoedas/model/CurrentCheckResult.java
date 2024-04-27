@@ -1,4 +1,6 @@
-package dev.swellingtonsoares.conversordemoedas;
+package dev.swellingtonsoares.conversordemoedas.model;
+
+import dev.swellingtonsoares.conversordemoedas.interfaces.ICurrentResultInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

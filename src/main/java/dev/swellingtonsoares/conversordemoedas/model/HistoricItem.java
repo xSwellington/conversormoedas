@@ -1,5 +1,6 @@
-package dev.swellingtonsoares.conversordemoedas;
+package dev.swellingtonsoares.conversordemoedas.model;
 
+import dev.swellingtonsoares.conversordemoedas.interfaces.ICurrentResultInfo;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

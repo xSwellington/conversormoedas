@@ -1,4 +1,4 @@
-package dev.swellingtonsoares.conversordemoedas;
+package dev.swellingtonsoares.conversordemoedas.model;
 
 public record DataResult(
         String result,

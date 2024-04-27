@@ -1,4 +1,4 @@
-package dev.swellingtonsoares.conversordemoedas;
+package dev.swellingtonsoares.conversordemoedas.interfaces;
 
 @FunctionalInterface
 public interface CurrencyEventHandler <T> {

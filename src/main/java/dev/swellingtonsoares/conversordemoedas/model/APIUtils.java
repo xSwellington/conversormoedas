@@ -1,7 +1,8 @@
-package dev.swellingtonsoares.conversordemoedas;
+package dev.swellingtonsoares.conversordemoedas.model;
 
 
 import com.google.gson.Gson;
+import dev.swellingtonsoares.conversordemoedas.interfaces.ICurrentResultInfo;
 
 import java.io.IOException;
 import java.net.URI;
